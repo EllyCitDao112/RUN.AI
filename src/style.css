@@ -1,0 +1,8 @@
+:root { font-family: Inter, system-ui, sans-serif; color: #eceff4; background: #111827; }
+body { margin: 0; }
+#app { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+section { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+label { display: block; margin: 0.5rem 0; }
+input, select, button { padding: 0.5rem; border-radius: 6px; border: 1px solid #4b5563; background: #0f172a; color: #f9fafb; }
+button { cursor: pointer; margin-top: 0.4rem; }
+pre { background: #030712; padding: 1rem; border-radius: 8px; overflow: auto; max-height: 240px; }
