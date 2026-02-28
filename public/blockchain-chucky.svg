@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="864" height="1536" viewBox="0 0 864 1536" role="img" aria-labelledby="title desc">
+  <title id="title">Blockchain Chucky placeholder banner</title>
+  <desc id="desc">Text-based placeholder to avoid binary file issues in PR updates.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="100%" stop-color="#1f2937"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#f97316"/>
+    </linearGradient>
+  </defs>
+  <rect width="864" height="1536" fill="url(#bg)"/>
+  <rect x="36" y="36" width="792" height="1464" rx="20" fill="none" stroke="url(#accent)" stroke-width="4"/>
+  <text x="432" y="220" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="88" font-weight="800" fill="#67e8f9">BLOCKCHAIN</text>
+  <text x="432" y="330" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="118" font-weight="900" fill="#fb923c">CHUCKY</text>
+  <circle cx="432" cy="700" r="190" fill="#0f172a" stroke="#fb923c" stroke-width="8"/>
+  <text x="432" y="690" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700" fill="#e2e8f0">TEXT ASSET</text>
+  <text x="432" y="735" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" fill="#94a3b8">No binary in PR updates</text>
+  <text x="432" y="1280" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="64" font-weight="800" fill="#e2e8f0">DARK. DIGITAL. DOMINANT.</text>
+</svg>

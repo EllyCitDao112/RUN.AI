@@ -1,0 +1,28 @@
+{
+  "name": "run-ai-music-pilot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "compile": "hardhat compile",
+    "deploy:bscTestnet": "node scripts/deploy.js",
+    "preview": "vite preview",
+    "env:doctor": "node scripts/env-doctor.js",
+    "setup:local": "bash scripts/fix-env.sh",
+    "rebuild": "bash scripts/rebuild.sh",
+    "setup:manual": "bash scripts/load-local-packages.sh"
+  },
+  "dependencies": {
+    "@irys/sdk": "^0.2.9",
+    "ethers": "^6.13.4"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "@openzeppelin/contracts": "^5.1.0",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.15",
+    "vite": "^5.4.10"
+  }
+}
