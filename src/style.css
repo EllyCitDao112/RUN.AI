@@ -4,5 +4,11 @@ body { margin: 0; }
 section { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
 label { display: block; margin: 0.5rem 0; }
 input, select, button { padding: 0.5rem; border-radius: 6px; border: 1px solid #4b5563; background: #0f172a; color: #f9fafb; }
-button { cursor: pointer; margin-top: 0.4rem; }
+button { cursor: pointer; margin-top: 0.4rem; margin-right: 0.4rem; }
+button.ghost { background: #172554; border-color: #1d4ed8; }
 pre { background: #030712; padding: 1rem; border-radius: 8px; overflow: auto; max-height: 240px; }
+.hidden { display: none; }
+#simCards { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.simCard { background: #111827; border: 1px solid #334155; border-radius: 8px; padding: 0.75rem; }
+.simCard h3 { margin: 0 0 0.4rem 0; font-size: 0.95rem; color: #93c5fd; }
+.simCard p { margin: 0; font-size: 0.85rem; line-height: 1.35; word-break: break-word; }

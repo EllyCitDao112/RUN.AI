@@ -56,6 +56,17 @@ npm run build
    - `VITE_PLATFORM_ADDRESS=<deployed_contract_address>`
 4. Workflow `.github/workflows/deploy.yml` builds and deploys `dist/`.
 
+
+### Display simulation mode
+
+For demo/screenshare without wallet or RPC, click **Display Simulation** in the UI, or open:
+
+```
+https://<user>.github.io/RUN.AI/?simulate=1
+```
+
+This renders sample subscription, track, download-gate, and CPM data client-side only.
+
 ## Key files
 
 - `contracts/MusicPilotPlatform.sol`

@@ -9,6 +9,7 @@ const app = document.querySelector("#app");
 app.innerHTML = `
   <h1>RUN.AI Music Pilot</h1>
   <button id="connect">Connect Wallet</button>
+  <button id="simulate" class="ghost">Display Simulation</button>
   <p id="account">Not connected</p>
 
   <section>
@@ -53,6 +54,11 @@ app.innerHTML = `
     <button id="postCpm">Post Report (owner/oracle)</button>
   </section>
 
+  <section id="simSection" class="hidden">
+    <h2>Simulation Output</h2>
+    <div id="simCards"></div>
+  </section>
+
   <pre id="log"></pre>
 `;
 
@@ -61,15 +67,85 @@ const log = (msg) => {
   el.textContent = `${new Date().toISOString()} ${msg}\n${el.textContent}`;
 };
 
+const withGuard = (fn) => async () => {
+  try {
+    await fn();
+  } catch (err) {
+    log(`Error: ${err?.message || err}`);
+  }
+};
+
+const now = Math.floor(Date.now() / 1000);
+const simulation = {
+  wallet: "0xF00D...BEEF",
+  subscriptions: [
+    { role: "Artist", tier: 1, expiry: now + 86400 * 30, active: true },
+    { role: "User", tier: 1, expiry: now + 86400 * 15, active: true },
+    { role: "Merchant", tier: 1, expiry: now - 10, active: false }
+  ],
+  track: {
+    id: 7,
+    title: "Neon Pulse",
+    metadataUri: "https://gateway.irys.xyz/sim-meta",
+    coverUri: "https://gateway.irys.xyz/sim-cover",
+    audioUri: "https://gateway.irys.xyz/sim-audio",
+    licensePrice: "0.001 tBNB"
+  },
+  gate: { licensed: false, userSubActive: true, canDownload: true },
+  cpm: [
+    { period: "2026-02-01 to 2026-02-15", cpm: "1250000000000000 wei", notes: "Launch promo" },
+    { period: "2026-02-16 to 2026-02-27", cpm: "950000000000000 wei", notes: "Organic only" }
+  ]
+};
+
+function renderSimulation() {
+  const section = document.querySelector("#simSection");
+  const cards = document.querySelector("#simCards");
+
+  const subRows = simulation.subscriptions
+    .map((s) => `${s.role} T${s.tier} • ${s.active ? "active" : "inactive"} • expiry ${new Date(s.expiry * 1000).toISOString()}`)
+    .join("<br/>");
+
+  const cpmRows = simulation.cpm.map((r) => `${r.period} • ${r.cpm} • ${r.notes}`).join("<br/>");
+
+  cards.innerHTML = `
+    <article class="simCard">
+      <h3>Wallet</h3>
+      <p>${simulation.wallet}</p>
+    </article>
+    <article class="simCard">
+      <h3>Subscriptions</h3>
+      <p>${subRows}</p>
+    </article>
+    <article class="simCard">
+      <h3>Track #${simulation.track.id}</h3>
+      <p><strong>${simulation.track.title}</strong><br/>${simulation.track.licensePrice}<br/>${simulation.track.metadataUri}</p>
+    </article>
+    <article class="simCard">
+      <h3>Download Gate</h3>
+      <p>licensed=${simulation.gate.licensed}<br/>userSubActive=${simulation.gate.userSubActive}<br/>canDownload=${simulation.gate.canDownload}</p>
+    </article>
+    <article class="simCard">
+      <h3>CPM Reports</h3>
+      <p>${cpmRows}</p>
+    </article>
+  `;
+
+  section.classList.remove("hidden");
+  log("Simulation displayed (no wallet/contract calls required).");
+}
+
 let wallet;
 
-document.querySelector("#connect").onclick = async () => {
+document.querySelector("#connect").onclick = withGuard(async () => {
   wallet = await connectWallet();
   document.querySelector("#account").textContent = wallet.address;
   log(`Connected ${wallet.address}`);
-};
+});
 
-document.querySelector("#buySub").onclick = async () => {
+document.querySelector("#simulate").onclick = () => renderSimulation();
+
+document.querySelector("#buySub").onclick = withGuard(async () => {
   const role = ROLES[document.querySelector("#subRole").value];
   const tier = Number(document.querySelector("#subTier").value);
   const days = Number(document.querySelector("#subDays").value);
@@ -79,9 +155,9 @@ document.querySelector("#buySub").onclick = async () => {
   const tx = await contract.subscribe(role, tier, days, { value: total });
   await tx.wait();
   log(`Subscription success tx=${tx.hash}`);
-};
+});
 
-document.querySelector("#register").onclick = async () => {
+document.querySelector("#register").onclick = withGuard(async () => {
   const title = document.querySelector("#title").value;
   const description = document.querySelector("#description").value;
   const price = ethers.parseEther(document.querySelector("#price").value || "0");
@@ -99,43 +175,40 @@ document.querySelector("#register").onclick = async () => {
   const tx = await contract.registerTrack(title, metadataUri, coverUri, audioUri, price);
   await tx.wait();
   log(`Track registered tx=${tx.hash} metadata=${metadataUri}`);
-};
+});
 
-document.querySelector("#buyLicense").onclick = async () => {
+document.querySelector("#buyLicense").onclick = withGuard(async () => {
   const trackId = Number(document.querySelector("#licenseTrackId").value);
   const contract = getPlatformContract(wallet.signer);
   const track = await contract.tracks(trackId);
   const tx = await contract.purchaseLicense(trackId, { value: track.licensePrice });
   await tx.wait();
   log(`License purchased tx=${tx.hash}`);
-};
+});
 
-document.querySelector("#checkGate").onclick = async () => {
+document.querySelector("#checkGate").onclick = withGuard(async () => {
   const trackId = Number(document.querySelector("#gateTrackId").value);
   const contract = getPlatformContract(wallet.provider);
-  const [allowed, track] = await Promise.all([
-    contract.canDownload(wallet.address, trackId),
-    contract.tracks(trackId)
-  ]);
+  const [allowed, track] = await Promise.all([contract.canDownload(wallet.address, trackId), contract.tracks(trackId)]);
 
   log(`Download allowed=${allowed}`);
   if (allowed) window.open(track.audioUri, "_blank");
-};
+});
 
-document.querySelector("#checkMerchant").onclick = async () => {
+document.querySelector("#checkMerchant").onclick = withGuard(async () => {
   const contract = getPlatformContract(wallet.provider);
   const status = await contract.isCommerciallyActive(wallet.address);
   log(`Merchant commercial status=${status}`);
-};
+});
 
-document.querySelector("#viewCpm").onclick = async () => {
+document.querySelector("#viewCpm").onclick = withGuard(async () => {
   const trackId = Number(document.querySelector("#cpmTrackId").value);
   const contract = getPlatformContract(wallet.provider);
   const reports = await contract.getCpmReports(trackId);
   log(`CPM reports: ${JSON.stringify(reports, null, 2)}`);
-};
+});
 
-document.querySelector("#postCpm").onclick = async () => {
+document.querySelector("#postCpm").onclick = withGuard(async () => {
   const trackId = Number(document.querySelector("#cpmTrackId").value);
   const start = Number(document.querySelector("#cpmStart").value);
   const end = Number(document.querySelector("#cpmEnd").value);
@@ -145,4 +218,8 @@ document.querySelector("#postCpm").onclick = async () => {
   const tx = await contract.postCpmReport(trackId, start, end, cpm, notes);
   await tx.wait();
   log(`CPM posted tx=${tx.hash}`);
-};
+});
+
+if (new URLSearchParams(window.location.search).get("simulate") === "1") {
+  renderSimulation();
+}
