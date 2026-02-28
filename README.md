@@ -55,6 +55,7 @@ npm run build
 3. Ensure secret is set:
    - `VITE_PLATFORM_ADDRESS=<deployed_contract_address>`
 4. Workflow `.github/workflows/deploy.yml` builds and deploys `dist/`.
+5. If the page shows source files/blank content, re-check **Settings → Pages → Build and deployment → Source = GitHub Actions**.
 
 
 ### Display simulation mode

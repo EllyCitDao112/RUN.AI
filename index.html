@@ -4,9 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RUN.AI Music Pilot</title>
+    <style>
+      body { margin: 0; font-family: Inter, system-ui, sans-serif; background: #111827; color: #eceff4; }
+      #app { max-width: 900px; margin: 0 auto; padding: 1.5rem; }
+      .fallback { background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 1rem; }
+      a { color: #93c5fd; }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <div class="fallback">
+        <h1>RUN.AI Music Pilot</h1>
+        <p>Loading app...</p>
+        <p>If this page stays blank, open <code>?simulate=1</code> or confirm GitHub Pages source is set to <strong>GitHub Actions</strong>.</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
